@@ -52,7 +52,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "plone.varnishcache.fullname" -}}
-{{- printf "%s-%s" .Release.Name "varnish-cache" | trunc 63 | trimSuffix "-" -}}
+{{- define "plone.nustercache.fullname" -}}
+{{- printf "%s-%s" .Release.Name "nuster-cache" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 

@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "plone.instance.fullname" . }}
@@ -9,6 +9,9 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.plone.instance.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "plone.instance.fullname" . }}
   template:
     metadata:
       labels:
@@ -31,8 +34,8 @@ spec:
             - name: ZEO_ADDRESS
               value: "{{ template "plone.zeoserver.fullname" . }}:{{ .Values.plone.zeoserver.httpPort }}"
           resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
+{{ toYaml .Values.plone.instance.resources | indent 12 }}
+{{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
     {{- end }}

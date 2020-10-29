@@ -26,7 +26,7 @@ plone:
 
     httpPort: 8080
 
-    replicas: 1
+    replicas: 3
     
     resources: {}
       # We usually recommend not to specify default resources and to leave this as a conscious
@@ -54,8 +54,8 @@ plone:
     httpPort: 8080
 
     autoscaleEnabled: true
-    autoscaleMin: 1
-    autoscaleMax: 1
+    autoscaleMin: 2
+    autoscaleMax: 10
     
     resources:
       requests:
@@ -96,28 +96,28 @@ plone:
       #  cpu: 100m
       #  memory: 128Mi
 
-  varnishcache:
+  nustercache:
     ## The repository and image
-    image: lmatos/varnish
+    image: nuster/nuster
 
     ## The tag for the image
-    tag: 2
+    tag: 2.0.10.18
 
     ## Specify an imagePullPolicy
     ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
     pullPolicy: "Always"
 
     ## The port which of the application
-    httpPort: 6081
+    httpPort: 8080
 
     autoscaleEnabled: true
     autoscaleMin: 1
-    autoscaleMax: 10
+    autoscaleMax: 5
 
     resources:
       limits:
-       cpu: 2000m
-       memory: 4096Mi
+       cpu: 1000m
+       memory: 2048Mi
       requests:
        cpu: 100m
        memory: 128Mi

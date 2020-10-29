@@ -10,9 +10,15 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /{{ .Values.gateway.url }}/admin
+        exact: /{{ .Values.gateway.url }}/login
+    redirect:
+      uri: /{{ .Values.gateway.url }}/editor/login
+  - match:
+    - uri:
+        prefix: /{{ .Values.gateway.url }}/editor
     rewrite:
-      uri: /VirtualHostBase/https/{{ .Values.gateway.domain }}:443/VirtualHostRoot/_vh_{{ .Values.gateway.url }}/
+      #uri: /VirtualHostBase/https/{{ .Values.gateway.domain }}:443/VirtualHostRoot/_vh_{{ .Values.gateway.url }}/
+      uri: /VirtualHostBase/https/{{ .Values.gateway.domain }}:443/Plone/VirtualHostRoot/_vh_{{ .Values.gateway.url }}/_vh_editor/
     route:
     - destination:
         host: {{ template "plone.editor.fullname" . }}
@@ -23,4 +29,5 @@ spec:
       uri: /VirtualHostBase/https/{{ .Values.gateway.domain }}:443/Plone/VirtualHostRoot/_vh_{{ .Values.gateway.url }}/
     route:
     - destination:
-        host: {{ template "plone.nustercache.fullname" . }}
+        host: {{ template "plone.varnishcache.fullname" . }}
+

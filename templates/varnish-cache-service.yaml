@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "plone.varnishcache.fullname" . }}
+  labels:
+    app: {{ template "plone.varnishcache.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: http
+    port: {{ .Values.plone.varnishcache.httpPort }}
+    targetPort: {{ .Values.plone.varnishcache.httpPort }}
+    protocol: TCP
+  selector:
+    app: {{ template "plone.varnishcache.fullname" . }}

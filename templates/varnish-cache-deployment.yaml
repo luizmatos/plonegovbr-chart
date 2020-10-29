@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "plone.varnishcache.fullname" . }}
+  labels:
+    app: {{ template "plone.varnishcache.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ .Values.plone.varnishcache.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "plone.varnishcache.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+        slot: {{ .Values.global.slot }} 
+      annotations: 
+    spec:
+      imagePullSecrets:
+        - name: registrymp
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.plone.varnishcache.image }}:{{ .Values.plone.varnishcache.tag }}"
+        imagePullPolicy: {{ .Values.plone.varnishcache.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.plone.varnishcache.httpPort }}
+        env:
+          - name: VARNISH_BACKEND_HOST
+            value: "{{ template "plone.instance.fullname" . }}"
+          - name: VARNISH_BACKEND_PORT
+            value: "{{ .Values.plone.instance.httpPort }}"
+          - name: VARNISH_CONFIG_PRESET
+            value: "plone"
+        resources:
+{{ toYaml .Values.plone.varnishcache.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+
+
+  
+{{- end }}
+
